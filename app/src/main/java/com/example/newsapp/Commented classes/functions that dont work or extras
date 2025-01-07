@@ -1,0 +1,769 @@
+/*
+@Composable
+fun WeatherPage(navController: NavHostController, onNavigate: () -> Unit) {
+    val coroutineScope = rememberCoroutineScope()
+    var weather by remember { mutableStateOf<WeatherResponse?>(null) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var isFetchingLocation by remember { mutableStateOf(false) }
+    var shouldRefreshWeather by remember { mutableStateOf(true) }
+
+    // Your API Key
+    val apiKey = "7117347fe5070ff05c3d04792c6e5476"
+
+    // Function to fetch weather based on location
+    fun fetchWeather(latitude: Double, longitude: Double) {
+        coroutineScope.launch {
+            try {
+                isFetchingLocation = true
+                errorMessage = null // Reset error message
+                weather = RetrofitInstance.api.getWeather(latitude, longitude, apiKey)
+            } catch (e: Exception) {
+                errorMessage = "Error: ${e.message}"
+            } finally {
+                isFetchingLocation = false
+            }
+        }
+    }
+
+    // Request location and fetch weather on refresh or first load
+    if (shouldRefreshWeather) {
+        shouldRefreshWeather = false
+        isFetchingLocation = true
+        GetLocation { latitude, longitude ->
+            fetchWeather(latitude, longitude)
+        }
+    }
+
+    // UI
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        when {
+            isFetchingLocation -> CircularProgressIndicator() // Loading state
+            weather != null -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    WeatherInfo(weather = weather!!)
+                    Button(
+                        onClick = {
+                            shouldRefreshWeather = true // Trigger refresh
+                        },
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
+                        Text("Refresh")
+                    }
+                }
+            }
+            errorMessage != null -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error)
+                    Button(
+                        onClick = {
+                            shouldRefreshWeather = true // Retry
+                        },
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
+                        Text("Retry")
+                    }
+                }
+            }
+        }
+    }
+}*/
+
+/*data class WeatherResponse(
+    val name: String,
+    val main: Main,
+    val weather: List<Weather>
+)
+
+data class Main(
+    val temp: Double,
+    val humidity: Int
+)
+
+data class Weather(
+    val description: String
+)*/
+
+/*
+@Composable
+fun ArticleItem(article: ArticleNews, onClick: (String) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onClick(article.url) }
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_launcher_foreground), // Placeholder image
+            contentDescription = "Article Image",
+            modifier = Modifier.size(64.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Column {
+            Text(text = article.title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+            Text(text = article.description, style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
+@Composable
+fun ArticleList(viewModel: NewsViewModel) {
+    val articles by viewModel.article.observeAsState(emptyList()) // Observe LiveData as State
+
+    LazyColumn {
+        items(articles) { article ->
+            ArticleItemComposable(article = article, navController = navController, onClick = {}, onFavoriteToggle = {})
+        }
+    }
+}*/
+
+/*@Composable
+fun ArticleItemComposable(article: Article, navController: NavController, onClick: () -> Unit, onFavoriteToggle: () -> Unit) {
+    Card(
+        modifier = Modifier.padding(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = {
+            navController.navigate(NewsArticleScreen(article.url))
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = article.urlToImage
+                    ?: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUrgu4a7W_OM8LmAuN7Prk8dzWXm7PVB_FmA&s",
+                contentDescription = "Article image",
+                modifier = Modifier
+                    .size(80.dp)
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 8.dp)
+            ) {
+                Text(
+                    text = article.title,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 3
+                )
+                Text(
+                    text = article.source.name,
+                    maxLines = 1,
+                    fontSize = 14.sp
+                )
+            }
+            IconButton(onClick = { onFavoriteToggle() }) {
+                Icon(
+                    imageVector = if (article.isFavourite) Icons.Filled.Star else Icons.Default.Star,
+                    contentDescription = "Favorite",
+                    tint = if (article.isFavourite) Color.Yellow else Color.Gray
+                )
+            }
+        }
+    }
+}*/
+
+/*@Composable
+fun ArticleItemComposable(
+    article: ArticleNews,
+    navController: NavController,
+    onClick: () -> Unit,
+    onFavoriteToggle: () -> Unit
+) {
+    Card(
+        modifier = Modifier.padding(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = {
+            val encodedUrl = URLEncoder.encode(article.url, StandardCharsets.UTF_8.toString())
+            navController.navigate("newsArticle/$encodedUrl")
+
+        }
+
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            AsyncImage(
+                model = article.imageUrl ?: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUrgu4a7W_OM8LmAuN7Prk8dzWXm7PVB_FmA&s",
+                contentDescription = "Article image",
+                modifier = Modifier
+                    .size(80.dp)
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop
+            )
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = article.title ?: "No Title",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    maxLines = 2
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = article.description ?: "No Description",
+                    fontSize = 14.sp,
+                    maxLines = 3
+                )
+            }
+            IconButton(onClick = { onFavoriteToggle() }) {
+                Icon(
+                    imageVector = if (article.isFavourite) Icons.Filled.Star else Icons.Default.Star,
+                    contentDescription = "Favorite",
+                    tint = if (article.isFavourite) Color.Yellow else Color.Gray
+                )
+            }
+        }
+    }
+}*/
+
+/*@Composable
+fun FooterBar(
+    navController: NavController,
+) {
+    NavigationBar {
+        FooterButton(navController = navController,"Home", "home", Icons.Default.Home)
+        FooterButton(navController = navController,"Recent", "recent", Icons.Default.DateRange)
+        FooterButton(navController = navController, "Favourite", "favourite", Icons.Default.Favorite)
+        FooterButton(navController = navController, "Weather", "weather", Icons.Default.Place)
+        FooterButton(navController = navController, "Help", "help", Icons.Default.Info)
+    }
+}*/
+
+/*@Composable
+fun FooterButton(navController: NavController, route: String, label: String, icon: ImageVector) {
+    NavigationBar {
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate("home") },
+            icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+            label = { Text("Home") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate("recent") },
+            icon = { Icon(Icons.Filled.DateRange, contentDescription = "Recent") },
+            label = { Text("Recent") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate("favourite") },
+            icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favourite") },
+            label = { Text("Favourite") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate("weather") },
+            icon = { Icon(Icons.Filled.Place, contentDescription = "Weather") },
+            label = { Text("Weather") }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate("help") },
+            icon = { Icon(Icons.Filled.Info, contentDescription = "Help") },
+            label = { Text("Help") }
+        )
+    }
+}*/
+
+
+/*@Composable
+fun FooterBar(navController: NavHostController, newsViewModel: NewsViewModel) {
+    BottomAppBar {
+        Button(onClick = { navController.navigate("home") }) {
+            Text("Home")
+        }
+        Button(onClick = { navController.navigate("recent") }) {
+            Text("Recent")
+        }
+       /* Button(onClick = { navController.navigate("favourites") }) {
+            Text("Favourites")
+        }*/
+        Button(onClick = { navController.navigate("weather") }) {
+            Text("Weather")
+        }
+        Button(onClick = { navController.navigate("info") }) {
+            Text("Info")
+        }
+    }
+}*/
+
+/*@Composable
+fun ArticleItem(article: Article, navController: NavController) {
+    Card(
+        modifier = Modifier.padding(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = {
+            navController.navigate("newsArticle/${article.url}")
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = article.urlToImage
+                    ?: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUrgu4a7W_OM8LmAuN7Prk8dzWXm7PVB_FmA&s",
+                contentDescription = "Article image",
+                modifier = Modifier
+                    .size(80.dp)
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 8.dp)
+            ) {
+                Text(
+                    text = article.title,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 3
+                )
+                Text(
+                    text = article.sourceName,
+                    maxLines = 1,
+                    fontSize = 14.sp
+                )
+            }
+        }
+    }
+}*/
+
+/*@Composable
+fun HomePage(newsViewModel: NewsViewModel, navController: NavController, onNavigate: (@Composable () -> Unit ) -> Unit) {
+
+    val articles by newsViewModel.articles.observeAsState(emptyList())
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        CategoriesBar(newsViewModel)
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(articles) { article ->
+                ArticleItem(
+                    title = article.title,
+                    description = article.description,
+                    imageUrl = article.imageUrl,
+                    article = article.article,
+                    url = article.url
+                )
+
+            }
+        }
+
+    }
+}*/
+
+/*@Composable
+fun RecentNewsScreen(
+    newsViewModel: NewsViewModel,
+    navController: NavController,
+    onNavigate: (@Composable () -> Unit) -> Unit
+) {
+    val articles = newsViewModel.articles.value // Access the current value of articles
+
+    var searchQuery by remember {
+        mutableStateOf("")
+    }
+
+    var isSearchExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            if (isSearchExpanded) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .height(48.dp)
+                        .border(1.dp, Color.Gray, CircleShape)
+                        .clip(CircleShape),
+                    value = searchQuery,
+                    onValueChange = {
+                        searchQuery = it
+                    },
+                    trailingIcon = {
+                        Row {
+                            if (searchQuery.isNotEmpty()) {
+                                IconButton(onClick = {
+                                    searchQuery = "" // Clear the search input
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Clear search",
+                                        tint = Color.Gray
+                                    )
+                                }
+                            }
+                            IconButton(onClick = {
+                                isSearchExpanded = false
+                                if (searchQuery.isNotEmpty()) {
+                                    newsViewModel.fetchEverythingWithQuery(searchQuery)
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search icon"
+                                )
+                            }
+                        }
+                    },
+                    singleLine = true, // Ensure it's single-line
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            isSearchExpanded = false
+                            if (searchQuery.isNotEmpty()) {
+                                newsViewModel.fetchEverythingWithQuery(searchQuery)
+                            }
+                        }
+                    )
+                )
+
+            } else {
+                IconButton(onClick = {
+                    isSearchExpanded = true
+                }) {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search icon")
+                }
+            }
+        }
+
+        // Get grouped articles from the ViewModel
+        val groupedArticles = newsViewModel.getArticlesGroupedByDate()
+
+        // Check if there are any accessed articles
+        if (groupedArticles.isEmpty()) {
+            Text(
+                text = "No recent articles found.",
+                modifier = Modifier.padding(top = 16.dp),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        } else {
+            // Display articles grouped by date
+            groupedArticles.forEach { (group, articles) ->
+                Text(
+                    text = group,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+                LazyColumn {
+                    items(articles) { article ->
+                        ArticleItem(
+                            article = article,
+                            navController = navController
+                        )
+                    }
+                }
+            }
+        }
+    }
+}*/
+
+/*@Composable
+fun RecentNewsScreen(
+    viewModel: NewsViewModel,
+    navController: NavController,
+    onNavigate: (@Composable () -> Unit) -> Unit
+) {
+    var searchQuery by remember {
+        mutableStateOf("")
+    }
+
+    var isSearchExpanded by remember {
+        mutableStateOf(false)
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            if (isSearchExpanded) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .height(48.dp)
+                        .border(1.dp, Color.Gray, CircleShape)
+                        .clip(CircleShape),
+                    value = searchQuery,
+                    onValueChange = {
+                        searchQuery = it
+                    },
+                    trailingIcon = {
+                        Row {
+                            if (searchQuery.isNotEmpty()) {
+                                IconButton(onClick = {
+                                    searchQuery = "" // Clear the search input
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Clear search",
+                                        tint = Color.Gray
+                                    )
+                                }
+                            }
+                            IconButton(onClick = {
+                                isSearchExpanded = false
+                                if (searchQuery.isNotEmpty()) {
+                                    viewModel.fetchEverythingWithQuery(searchQuery)
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search icon"
+                                )
+                            }
+                        }
+                    },
+                    singleLine = true, // Ensure it's single-line
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            isSearchExpanded = false
+                            if (searchQuery.isNotEmpty()) {
+                                viewModel.fetchEverythingWithQuery(searchQuery)
+                            }
+                        }
+                    )
+                )
+
+            } else {
+                IconButton(onClick = {
+                    isSearchExpanded = true
+                }) {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search icon")
+                }
+            }
+        }
+        // Group articles by date
+        val groupedArticles by remember { mutableStateOf(viewModel.getArticlesGroupedByDate()) }
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            // Display groups (Today, Yesterday, etc.)
+            groupedArticles.forEach { (dateGroup, articles) ->
+                // Section Header (e.g., "Today")
+                item {
+                    Text(
+                        text = dateGroup,
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+                }
+
+                // Display articles under the group
+                items(articles) { article ->
+                    ArticleItemComposable(
+                        article = article,
+                        navController = navController,
+                        onClick = {
+                            viewModel.markArticleAsAccessed(article)
+                            navController.navigate("newsArticle/${article.url}")
+                        },
+                        onFavoriteToggle = {
+                            viewModel.toggleFavorite(article)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}*/
+
+/*@SuppressLint("MutableCollectionMutableState")
+@Composable
+fun RecentNewsScreen(
+    viewModel: NewsViewModel,
+    navController: NavController,
+    onNavigate: (@Composable () -> Unit) -> Unit
+) {
+    var searchQuery by remember { mutableStateOf("") }
+    var isSearchExpanded by remember { mutableStateOf(false) }
+
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Clear History Button
+        Button(
+            onClick = { viewModel.clearRecent() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Text("Clear History")
+        }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            if (isSearchExpanded) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .height(48.dp)
+                        .border(1.dp, Color.Gray, CircleShape)
+                        .clip(CircleShape),
+                    value = searchQuery,
+                    onValueChange = {
+                        searchQuery = it
+                    },
+                    trailingIcon = {
+                        Row {
+                            if (searchQuery.isNotEmpty()) {
+                                IconButton(onClick = {
+                                    searchQuery = "" // Clear the search input
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Clear search",
+                                        tint = Color.Gray
+                                    )
+                                }
+                            }
+                            IconButton(onClick = {
+                                isSearchExpanded = false
+                                if (searchQuery.isNotEmpty()) {
+                                    viewModel.fetchEverythingWithQuery(searchQuery)
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search icon"
+                                )
+                            }
+                        }
+                    },
+                    singleLine = true, // Ensure it's single-line
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            isSearchExpanded = false
+                            if (searchQuery.isNotEmpty()) {
+                                viewModel.fetchEverythingWithQuery(searchQuery)
+                            }
+                        }
+                    )
+                )
+
+            } else {
+                IconButton(onClick = {
+                    isSearchExpanded = true
+                }) {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search icon")
+                }
+            }
+        }
+
+        // Update accessedArticles when articles are fetched or marked as accessed
+        /*LaunchedEffect(viewModel.articles) {
+            val accessedArticles = viewModel.getAccessedArticles()
+            accessedArticles.addAll(viewModel.articles.value?.filter { it.isAccessed } ?: emptyList())
+        }*/
+
+        val groupedAccessedArticles = viewModel.getAccessedArticlesGroupedByDate()
+        val accessedArticles by remember { derivedStateOf { viewModel.getAccessedArticles() } }
+        val recentArticles by viewModel.recent.observeAsState(emptyList())
+
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            groupedAccessedArticles.forEach { (dateGroup) ->
+                item {
+                    Text(
+                        text = dateGroup, // Display the date group (e.g., "Today", "Yesterday")
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    )
+                }
+
+                items(recentArticles) { article ->
+                    ArticleItem(
+                        article = article,
+                        navController = navController,
+                        onClick = {
+                            viewModel.markArticleAsAccessed(article)
+                            navController.navigate("newsArticle/${Uri.encode(article.url)}")
+
+                        },
+                        onFavoriteToggle = {
+                            viewModel.toggleFavorite(article)
+                        }
+                    )
+                }
+                /*if (accessedArticles.isNotEmpty()) {
+                    /*item {
+                        Text(
+                            text = "Accessed articles",
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.fillMaxWidth().padding(16.dp)
+                        )
+                    }*/
+                    items(recentArticles) { article ->
+                        ArticleItem(
+                            article = article,
+                            navController = navController,
+                            onClick = {
+                                navController.navigate("newsArticle/${Uri.encode(article.url)}") {
+                                    // Add to recent articles
+                                    viewModel.addToRecent(article)
+                                }
+
+                            },
+                            onFavoriteToggle = {
+                                viewModel.toggleFavorite(article)
+                            }
+                        )
+                    }
+                } else {
+                    item {
+                        Text(
+                            text = "No recent articles",
+                            modifier = Modifier.padding(top = 16.dp),
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }*/
+            }
+        }
+    }
+}*/

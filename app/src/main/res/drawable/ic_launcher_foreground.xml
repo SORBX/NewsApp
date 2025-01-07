@@ -1,0 +1,38 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Circle boundary for the adaptive icon -->
+    <clip-path
+        android:pathData="M54,2a52,52 0 1,0 0.1,0z" />
+
+    <!-- Main body of the newspaper, scaled and centered -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:pathData="M27,27h54v54h-54z" />
+
+    <!-- Horizontal text lines -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M32,32h44v4h-44z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M32,40h44v3h-44z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M32,46h44v3h-44z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M32,52h32v3h-32z" />
+
+    <!-- Image placeholder -->
+    <path
+        android:fillColor="#CCCCCC"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:pathData="M32,58h20v16h-20z" />
+</vector>
