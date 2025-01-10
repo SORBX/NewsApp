@@ -10,10 +10,20 @@ Once donloaded open the software, on top left click on it, then click on open.
 
 Once you click on open find the code where is it saved, it will look like the android logo instead of a directory/folder. 
 
+![image](https://github.com/user-attachments/assets/e1d03333-645c-4fde-b7f0-d6c282d08cb8)
 
 
 After that select which device to emulate by clicking on device manager on the top right-hand side, go on '+' and then select create virtual device. This is where any type of device and verison can be selected.
+
+![image](https://github.com/user-attachments/assets/fa10e46d-5001-4877-81a2-780c96ba9a26)
+
+![image](https://github.com/user-attachments/assets/da984925-d17d-4bfc-9159-b49107eb0b4a)
+
+
 Then, click on run app (note: when first running it will take a while to emulate, but constantly re-running the app will be quicker eventually).
 Once it runs, enjoy the app. :)
+
+![image](https://github.com/user-attachments/assets/b62ddc7b-961f-4d45-8f54-3598e1e332c2)
+
 
 Heres the link to android studio: https://developer.android.com/studio
