@@ -10,7 +10,7 @@ Once donloaded open the software, on top left click on it, then click on open.
 
 Once you click on open find the code where is it saved, it will look like the android logo instead of a directory/folder. 
 
-![image](https://github.com/user-attachments/assets/e1d03333-645c-4fde-b7f0-d6c282d08cb8)
+![image](https://github.com/user-attachments/assets/4b5b9b77-858b-454a-81f3-d70a1b9cc885)
 
 
 After that select which device to emulate by clicking on device manager on the top right-hand side, go on '+' and then select create virtual device. This is where any type of device and verison can be selected.
