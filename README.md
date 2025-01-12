@@ -21,9 +21,11 @@ After that select which device to emulate by clicking on device manager on the t
 
 
 Then, click on run app (note: when first running it will take a while to emulate, but constantly re-running the app will be quicker eventually).
-Once it runs, enjoy the app. :)
 
 ![image](https://github.com/user-attachments/assets/b62ddc7b-961f-4d45-8f54-3598e1e332c2)
 
+Once it runs, enjoy the app. :)
+
+![pngegg](https://github.com/user-attachments/assets/b3612b4c-c932-4f66-b1e2-813efcd74c9d)
 
 Heres the link to android studio: https://developer.android.com/studio
